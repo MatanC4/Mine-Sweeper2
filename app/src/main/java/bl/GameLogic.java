@@ -149,7 +149,6 @@ public class GameLogic {
     private void scanAfterClick(int row, int col, ArrayList<CellResult> results) {
         try {
             if (this.status[row][col] == false) {
-                Log.d("row/col", row + " " + col);
                 results.add(new CellResult(row, col, this.board[row][col]));
                 status[row][col] = true;
                 if (this.board[row][col] == 0) {

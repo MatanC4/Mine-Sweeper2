@@ -1,8 +1,12 @@
 package com.example.matka.minesweeper;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,11 +30,16 @@ import bl.GameEvent;
 import bl.GameListener;
 import bl.GameLogic;
 import bl.Level;
+import bound.BoundService;
+import bound.BoundServiceListener;
 import components.*;
 import timer.GameTimer;
 
 
-public class MineBoard extends AppCompatActivity implements TileButtonListener , GameListener{
+public class MineBoard extends AppCompatActivity implements TileButtonListener , GameListener, BoundServiceListener{
+
+
+    private static final String TAG = MineBoard.class.getSimpleName();
 
     private GameLogic gameLogic;
     private TableLayout tableLayout;
@@ -38,7 +47,7 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
     private ImageButton flag;
     private TileButton [][] board;
     private android.os.Handler handler , handlerDelayEndGame;
-    private int counter = 0 , counterDelay = 0;
+    private int counter = 0 , counterDelay = 0, outOfAngelTime = 0;
     private GameTimer timer, timerDelayEndGame;
     private HashMap <Integer, Integer> resultsMapping;
     private GoogleApiClient client;
@@ -46,11 +55,28 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
     private boolean flagMode = false;
     private LinearLayout rowsLayout;
     private LinearLayout colsLayout;
+    private BoundService service;
 
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder serviceBinder) {
+            if (serviceBinder instanceof BoundService.ServiceBinder) {
+                setService(((BoundService.ServiceBinder) serviceBinder).getService());
+            }
+            Log.d(TAG, "onServiceConnected: " + name);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            setService(null);
+            Log.d(TAG, "onServiceDisconnected: " + name);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        outOfAngelTime = 0;
         setContentView(R.layout.activity_game);
         resultsMapping = initCellImagesMapping(getIntent().getStringExtra("level"));
         gameLogic = initGameLogic(gameLogic);
@@ -58,7 +84,22 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
         buildBoard();
         handleFlag();
         timerRun();
+        boolean bindingSucceeded = bindService(new Intent(this, BoundService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        Log.d(TAG, "onCreate: " + (bindingSucceeded ? "the binding succeeded..." : "the binding failed!"));
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (service != null){
+            service.stopListening();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(serviceConnection);
     }
 
     private void buildBoard() {
@@ -174,12 +215,14 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
     public void buttonClicked(TileButton tileButton){
 
         if(flagMode) {
-            if (tileButton.isFlagged()) {
-                tileButton.setFlagged(false);
-                tileButton.setBackgroundResource(resultsMapping.get(11));
-            } else {
-                tileButton.setFlagged(true);
-                tileButton.setBackgroundResource(resultsMapping.get(10));
+            if(!tileButton.isRevealed()) {
+                if (tileButton.isFlagged()) {
+                    tileButton.setFlagged(false);
+                    tileButton.setBackgroundResource(resultsMapping.get(11));
+                } else {
+                    tileButton.setFlagged(true);
+                    tileButton.setBackgroundResource(resultsMapping.get(10));
+                }
             }
         }
 
@@ -267,5 +310,34 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
     @Override
     public void onBackPressed(){
         super.onBackPressed();
+    }
+
+    @Override
+    public void onAngelChange(boolean isRecovering) {
+        if(isRecovering)
+            this.outOfAngelTime = 0;
+        else{
+            this.outOfAngelTime++;
+            if(this.outOfAngelTime % 3 == 0){
+                ArrayList<CellResult> changes = gameLogic.addMime();
+                board[changes.get(0).getCol()][changes.get(0).getRow()].setBackgroundResource(resultsMapping.get(11));
+                for(int i = 1; i<changes.size();i++)
+                    board[changes.get(i).getCol()][changes.get(i).getRow()].setBackgroundResource(resultsMapping.get(changes.get(i).getValue()));
+            }
+        }
+    }
+
+    public void setService(BoundService service) {
+        if (service != null) {
+            this.service = service;
+            service.setListener(this);
+            service.startListening();
+        }
+        else {
+            if (this.service != null) {
+                this.service.setListener(null);
+            }
+            this.service = null;
+        }
     }
 }
