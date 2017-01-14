@@ -213,7 +213,6 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
 
     @Override
     public void buttonClicked(TileButton tileButton){
-
         if(flagMode) {
             if(!tileButton.isRevealed()) {
                 if (tileButton.isFlagged()) {
