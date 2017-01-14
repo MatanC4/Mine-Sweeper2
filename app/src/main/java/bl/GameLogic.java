@@ -79,18 +79,18 @@ public class GameLogic {
 
     private void scanUnder(CellResult mine, ArrayList<CellResult> results) {
         if(mine.getCol()>0)
-            addOneIfNotMine(mine.getRow()-1,mine.getCol()-1, results);
-        if(mine.getCol()<this.rows-1)
-            addOneIfNotMine(mine.getRow()-1,mine.getCol()+1, results);
-        addOneIfNotMine(mine.getRow()-1,mine.getCol(), results);
-    }
-
-    private void scanAbove(CellResult mine, ArrayList<CellResult> results){
-        if(mine.getCol()>0)
             addOneIfNotMine(mine.getRow()+1,mine.getCol()-1, results);
         if(mine.getCol()<this.rows-1)
             addOneIfNotMine(mine.getRow()+1,mine.getCol()+1, results);
         addOneIfNotMine(mine.getRow()+1,mine.getCol(), results);
+    }
+
+    private void scanAbove(CellResult mine, ArrayList<CellResult> results){
+        if(mine.getCol()>0)
+            addOneIfNotMine(mine.getRow()-1,mine.getCol()-1, results);
+        if(mine.getCol()<this.rows-1)
+            addOneIfNotMine(mine.getRow()-1,mine.getCol()+1, results);
+        addOneIfNotMine(mine.getRow()-1,mine.getCol(), results);
     }
 
 

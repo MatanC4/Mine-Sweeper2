@@ -8,6 +8,7 @@ public class RecordObj {
     private String userName;
     private String score;
     private String location;
+    private String level;
 
 
     public String getUserName() {

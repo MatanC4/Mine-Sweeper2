@@ -326,12 +326,11 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
 
     @Override
     public void onAngelChange(boolean isRecovering) {
-        Toast.makeText(MineBoard.this, "onAngelChange is called", Toast.LENGTH_SHORT).show();
         if(isRecovering)
             this.outOfAngelTime = 0;
         else{
             this.outOfAngelTime++;
-            if(this.outOfAngelTime % 3 == 0){
+            if(this.outOfAngelTime % 2 == 0){
                 ArrayList<CellResult> changes = gameLogic.addMime();
                 mineCount.setText(""+gameLogic.getNumOFMines());
                 board[changes.get(0).getCol()][changes.get(0).getRow()].setBackgroundResource(resultsMapping.get(11));
