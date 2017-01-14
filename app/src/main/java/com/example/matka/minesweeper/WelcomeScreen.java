@@ -39,11 +39,18 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     }
 
     private void readHighScores() {
-        SharedPreferences scoresDB = getApplicationContext().getSharedPreferences("Scores", 0);
 
+        SharedPreferences scoresDB = getApplicationContext().getSharedPreferences("Scores", 0);
+        /// clear the shared pref
+        SharedPreferences.Editor editor = scoresDB.edit();
+        editor.putInt("easy",0);
+        editor.apply();
+        ////////////////////////
         easyBS = scoresDB.getInt(Level.easy.toString(), 0);
         mediumBS = scoresDB.getInt(Level.medium.toString(), 0);
         hardBS = scoresDB.getInt(Level.hard.toString(), 0);
+
+
     }
 
     public void bindUI() {
