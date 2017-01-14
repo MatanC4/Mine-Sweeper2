@@ -64,7 +64,7 @@ public class BoundService extends Service implements SensorEventListener {
 
                     double lastDistance = Math.sqrt(Math.pow(startX-lastX,2)+Math.pow(startY-lastY,2)+Math.pow(startZ-lastZ,2));
                     double currentDistance = Math.sqrt(Math.pow(startX-x,2)+Math.pow(startY-y,2)+Math.pow(startZ-z,2));
-                    boolean isRecovering = currentDistance<lastDistance;
+                    boolean isRecovering = currentDistance<lastDistance || (lastDistance==0 && currentDistance==0) ;
                     lastX = x;
                     lastY = y;
                     lastZ = z;

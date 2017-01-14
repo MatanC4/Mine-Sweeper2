@@ -15,26 +15,33 @@ import android.view.View;
 import android.widget.TextView;
 import android.app.ActionBar;
 
+import com.google.android.gms.maps.*;
 
 
 public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFragmentInteractionListener {
 
-    // When requested, this adapter returns a MapFragment,
-    // representing an object in the collection.
+    public Fragment myMapFragment;
+    private GoogleMap myMap;
     DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
     ViewPager mViewPager;
-    //public static final List<ListFragment> ITEMS = new ArrayList<>();
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_board);
 
         // ViewPager and its adapters use support library
         // fragments, so use getSupportFragmentManager.
+        bindUi();
+
+
+    }
+
+    private void bindUi() {
         mDemoCollectionPagerAdapter =  new DemoCollectionPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
-        //ListFragment lf = new ListFragment();
-        //ITEMS.add(lf);
+        myMapFragment = mDemoCollectionPagerAdapter.getItem(1);
+
     }
 
     @Override

@@ -151,25 +151,24 @@
             android:layout_gravity="center_horizontal"
             android:textSize="20dp" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scores"
+            android:id="@+id/Test_Button"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" />
+
+
+
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="scores"
-        android:id="@+id/Test_Button"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
 
 
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/Test_Button" />
+
+
+
 
 </RelativeLayout>
