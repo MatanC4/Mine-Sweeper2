@@ -19,6 +19,7 @@ import android.util.Log;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -56,6 +57,10 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
     private LinearLayout rowsLayout;
     private LinearLayout colsLayout;
     private BoundService service;
+    private TextView mineCount;
+
+
+
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -86,8 +91,14 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
         buildBoard();
         handleFlag();
         timerRun();
+        setMineCount();
         boolean bindingSucceeded = bindService(new Intent(this, BoundService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         Log.d(TAG, "onCreate: " + (bindingSucceeded ? "the binding succeeded..." : "the binding failed!"));
+    }
+
+    private void setMineCount() {
+        mineCount = (TextView) findViewById(R.id.mine_count);
+        mineCount.setText(""+gameLogic.getNumOFMines());
     }
 
     @Override
@@ -315,12 +326,14 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
 
     @Override
     public void onAngelChange(boolean isRecovering) {
+        Toast.makeText(MineBoard.this, "onAngelChange is called", Toast.LENGTH_SHORT).show();
         if(isRecovering)
             this.outOfAngelTime = 0;
         else{
             this.outOfAngelTime++;
             if(this.outOfAngelTime % 3 == 0){
                 ArrayList<CellResult> changes = gameLogic.addMime();
+                mineCount.setText(""+gameLogic.getNumOFMines());
                 board[changes.get(0).getCol()][changes.get(0).getRow()].setBackgroundResource(resultsMapping.get(11));
                 for(int i = 1; i<changes.size();i++)
                     board[changes.get(i).getCol()][changes.get(i).getRow()].setBackgroundResource(resultsMapping.get(changes.get(i).getValue()));
