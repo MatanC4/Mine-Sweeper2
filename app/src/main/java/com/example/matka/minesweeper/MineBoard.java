@@ -62,6 +62,8 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
         public void onServiceConnected(ComponentName name, IBinder serviceBinder) {
             if (serviceBinder instanceof BoundService.ServiceBinder) {
                 setService(((BoundService.ServiceBinder) serviceBinder).getService());
+                service.setListener(MineBoard.this);
+                service.startListening();
             }
             Log.d(TAG, "onServiceConnected: " + name);
         }
@@ -86,8 +88,6 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
         timerRun();
         boolean bindingSucceeded = bindService(new Intent(this, BoundService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         Log.d(TAG, "onCreate: " + (bindingSucceeded ? "the binding succeeded..." : "the binding failed!"));
-        service.setListener(this);
-        service.startListening();
     }
 
     @Override
