@@ -24,7 +24,7 @@ public class BoundService extends Service implements SensorEventListener {
     private long lastMillis = 0;
     private ServiceBinder serviceBinder;
     private SensorManager sensorManager;
-    private BoundServiceListener listenter;
+    private BoundServiceListener listener;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -39,7 +39,7 @@ public class BoundService extends Service implements SensorEventListener {
     }
 
     public void setListener(BoundServiceListener listenter){
-        this.listenter = listenter;
+        this.listener = listenter;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class BoundService extends Service implements SensorEventListener {
                     lastX = x;
                     lastY = y;
                     lastZ = z;
-                    listenter.onAngelChange(isRecovering);
+                    listener.onAngelChange(isRecovering);
                     lastMillis = System.currentTimeMillis();
                 }
             }

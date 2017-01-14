@@ -293,5 +293,9 @@ public class GameLogic {
     public int getNumOfCols() {
         return cols;
     }
+
+    public int getNumOFMines(){
+        return mines;
+    }
 }
 
