@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:background="@drawable/minefield_bg_image">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:outlineProvider="background">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="YOU LOST.. IT IS SAD"
+            android:shadowColor="#0c0b0b"
+            android:id="@+id/results_screen_title"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="28dp"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="28dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sad_smiley_icon_for_results"
+            android:layout_below="@+id/results_screen_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="62dp"
+            android:src="@drawable/sad_smiley" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="Play Again!"
+            android:id="@+id/play_again_btn"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/round_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/textView3"
+            android:layout_below="@+id/results_screen_title"
+            android:layout_alignStart="@+id/results_screen_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/textViewTime"
+            android:layout_below="@+id/textView3"
+            android:textSize="40dp"
+            android:textColor="#d6f5f9f4" />
+
+    </RelativeLayout>
+</LinearLayout>
