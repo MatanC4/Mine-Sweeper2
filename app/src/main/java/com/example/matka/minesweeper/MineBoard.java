@@ -86,6 +86,8 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
         timerRun();
         boolean bindingSucceeded = bindService(new Intent(this, BoundService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         Log.d(TAG, "onCreate: " + (bindingSucceeded ? "the binding succeeded..." : "the binding failed!"));
+        service.setListener(this);
+        service.startListening();
     }
 
     @Override
