@@ -47,6 +47,7 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
     private LinearLayout rowsLayout;
     private LinearLayout colsLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
