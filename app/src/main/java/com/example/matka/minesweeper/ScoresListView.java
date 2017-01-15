@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
 
+import data.RecordObj;
 
 
 public class ScoresListView extends Fragment {
