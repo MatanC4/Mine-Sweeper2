@@ -20,6 +20,10 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import data.RecordObj;
+import data.ScoreTable;
+import data.SharedPreferencesHandler;
+
 
 public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFragmentInteractionListener , OnMapReadyCallback  {
 
@@ -33,30 +37,25 @@ public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_board);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-       // mp = getSupportFragmentManager()
-             //.findFragmentById(R.id.map);
-
-        // mapFragment = (SupportMapFragment) getSupportFragmentManager()
-          //      .findFragmentById(R.id.map);
-        //mapFragment.getMapAsync(this);
-        // ViewPager and its adapters use support library
-        // fragments, so use getSupportFragmentManager.
-
+        MyScoresMap myScoreMap = (MyScoresMap)getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+        if (myScoreMap==null){
+            myScoreMap = MyScoresMap.newInstance();
+            getSupportFragmentManager().beginTransaction().add(R.id.frame_layout,myScoreMap).commit();
+        }
 
         bindUi();
+        mDemoCollectionPagerAdapter =  new DemoCollectionPagerAdapter(getSupportFragmentManager(),myScoreMap);
+
+        //MyScoresMap myScoreMap = (MyScoresMap) mDemoCollectionPagerAdapter.getItem(1);
 
 
     }
 
     private void bindUi() {
-        mDemoCollectionPagerAdapter =  new DemoCollectionPagerAdapter(getSupportFragmentManager());
+
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
-        addMarkerToMap(-34, 151);
+
     }
 
     @Override
@@ -67,7 +66,11 @@ public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFra
    @Override
     public void onMapReady(GoogleMap googleMap) {
         myMap = googleMap;
-
+       ScoreTable st = SharedPreferencesHandler.getData(this);
+       ArrayList<RecordObj> scores = st.getScoreTable();
+       for(RecordObj r :scores ){
+           r.getLocation();
+       }
 
        LatLng sydney = new LatLng(-34,151);
        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));

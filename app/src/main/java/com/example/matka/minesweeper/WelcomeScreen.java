@@ -44,10 +44,10 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         bindUI();
 
         //dummyWriteToPreferences();
-        dummyReadFromPreferences();
+        //dummyReadFromPreferences();
     }
 
-    private void readNewHighScores() {
+        private void readNewHighScores() {
         ScoreTable table = SharedPreferencesHandler.getData(this);
         hardBS = table.getHardScoreTable().get(0).getScore();
         mediumBS = table.getMediumScoreTable().get(0).getScore();
@@ -166,6 +166,7 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
                 intent.putExtra("level", Level.easy.toString());
                 startBtn.setText("START\n" + Level.easy.toString());
                 startBtn.setTextColor(Color.parseColor("#D7FF33"));
+
                 break;
             case R.id.level2:
                 intent.putExtra("level", Level.medium.toString());
@@ -179,4 +180,8 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+
+
+
+
 }
