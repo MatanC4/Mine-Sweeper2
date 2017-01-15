@@ -24,6 +24,15 @@
         android:paddingTop="30dp"
         android:layout_alignParentBottom="true">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scores"
+            android:id="@+id/Test_Button"
+            android:layout_gravity="right"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" />
+
         <TextView
             android:layout_width="274dp"
             android:layout_height="wrap_content"
@@ -150,16 +159,6 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:textSize="20dp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="scores"
-            android:id="@+id/Test_Button"
-            android:layout_gravity="center_horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true" />
-
 
 
     </LinearLayout>

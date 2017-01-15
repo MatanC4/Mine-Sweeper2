@@ -30,4 +30,11 @@
     </android.support.v4.view.ViewPager>
 
 
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="500px"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        />
+
 </RelativeLayout>

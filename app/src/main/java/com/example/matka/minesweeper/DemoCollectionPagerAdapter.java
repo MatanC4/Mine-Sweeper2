@@ -19,14 +19,13 @@ import android.support.v4.app.*;
                     ScoresListView tab1 = new ScoresListView();
                     return tab1;
                 case 1:
-                    MapFragment tab2 = new MapFragment();
+                    MyScoresMap tab2 = new MyScoresMap();
                     return tab2;
-
                 default:
                     return null;
             }
 
-           /* Fragment fragment = new MapFragment();
+           /* Fragment fragment = new MyScoresMap();
             Bundle args = new Bundle();
             // Our object is just an integer :-P
             ScoresListView slv = new ScoresListView();
@@ -47,7 +46,7 @@ import android.support.v4.app.*;
                 if (position == 0)
                     return ("Score Table");
                 else
-                    return ("Map View");
+                    return ("MyScoresMap View");
             }
         }
 
