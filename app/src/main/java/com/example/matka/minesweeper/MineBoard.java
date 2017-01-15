@@ -1,5 +1,7 @@
 package com.example.matka.minesweeper;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +10,14 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -316,6 +322,32 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
         for(CellResult cell : event.getMines()){
             board[cell.getCol()][cell.getRow()].setBackgroundResource(resultsMapping.get(cell.getValue()));
         }
+        if(!event.isWon()){
+            TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 2000);
+            animation.setDuration(1000);
+            animation.setFillAfter(false);
+            animation.setAnimationListener(new MyAnimationListener());
+
+            rowsLayout.startAnimation(animation);
+        }
+        else{
+            final int initialColor = ContextCompat.getColor(this, R.color.Yellow);
+            final int finalColor = ContextCompat.getColor(this, R.color.Red);
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), initialColor, finalColor);
+            colorAnimation.setDuration(400);
+            colorAnimation.setRepeatCount(2);
+            colorAnimation.setRepeatMode(ValueAnimator.REVERSE);
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    RelativeLayout screen = (RelativeLayout)findViewById(R.id.mainLayout);
+                    screen.setBackgroundColor((int) animator.getAnimatedValue());
+                }
+
+            });
+            colorAnimation.start();
+        }
         endOfGameDelay(event.isWon());
     }
 
@@ -352,5 +384,23 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
             }
             this.service = null;
         }
+    }
+
+    private class MyAnimationListener implements Animation.AnimationListener{
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            rowsLayout.clearAnimation();
+            rowsLayout.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+
     }
 }
