@@ -30,7 +30,7 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     private int easyBS, mediumBS, hardBS;
     private Intent intent;
     private Button testBtn;  // to be removed after test
-
+    private Intent intent2; // to be removed after test
     private MenuItem menuItem;
     Intent intent2; // to be removed after test
     private Button scoreBtn;
@@ -114,6 +114,10 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         });
 
 
+
+
+
+
         //FORE TESTING ONLY#####################################################################
 
 
@@ -177,5 +181,8 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+
+
+
 
 }
