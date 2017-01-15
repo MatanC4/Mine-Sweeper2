@@ -29,7 +29,7 @@ public class SharedPreferencesHandler {
         String json = scoresDB.getString(DB_TABLE,null);
         Gson gson = new Gson();
         ScoreTable st = gson.fromJson(json,ScoreTable.class);
-        st.sortTables();
+//        st.sortTables();
         return st;
     }
 }

@@ -30,7 +30,7 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     private int easyBS, mediumBS, hardBS;
     private Intent intent;
     private Button testBtn;  // to be removed after test
-    private Intent intent2; // to be removed after test
+
     private MenuItem menuItem;
     Intent intent2; // to be removed after test
     private Button scoreBtn;
@@ -45,10 +45,10 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         bindUI();
 
         //dummyWriteToPreferences();
-        dummyReadFromPreferences();
+        //dummyReadFromPreferences();
     }
 
-    private void readNewHighScores() {
+        private void readNewHighScores() {
         ScoreTable table = SharedPreferencesHandler.getData(this);
         hardBS = table.getHardScoreTable().get(0).getScore();
         mediumBS = table.getMediumScoreTable().get(0).getScore();
@@ -114,10 +114,6 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         });
 
 
-
-
-
-
         //FORE TESTING ONLY#####################################################################
 
 
@@ -181,8 +177,5 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
-
-
-
 
 }

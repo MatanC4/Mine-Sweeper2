@@ -1,14 +1,20 @@
 package com.example.matka.minesweeper;
 
+import android.content.Context;
 import android.support.v4.app.*;
+
+import com.google.android.gms.maps.MapFragment;
 
 /**
  * Created by matka on 13/01/17.
  */
 
     public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
-        public DemoCollectionPagerAdapter(FragmentManager fm) {
+        private MyScoresMap context;
+
+        public DemoCollectionPagerAdapter(FragmentManager fm , MyScoresMap context) {
             super(fm);
+            this.context = context;
         }
 
         @Override
@@ -19,8 +25,12 @@ import android.support.v4.app.*;
                     ScoresListView tab1 = new ScoresListView();
                     return tab1;
                 case 1:
-                    MyScoresMap tab2 = new MyScoresMap();
-                    return tab2;
+                    //MyScoresMap myScoremMap = (MyScoresMap) context.getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+                    //if (myScoremMap==null){
+                     // myScoremMap = MyScoresMap.newInstance();
+                    //context.getSupportFragmentManager().beginTransaction().add(R.id.frame_layout,myScoremMap).commit();
+                    //}
+                    return context;
                 default:
                     return null;
             }
