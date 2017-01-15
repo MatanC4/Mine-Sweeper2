@@ -32,6 +32,8 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     private Button testBtn;  // to be removed after test
     private Intent intent2; // to be removed after test
     private MenuItem menuItem;
+    Intent intent2; // to be removed after test
+    private Button scoreBtn;
 
 
     @Override
@@ -103,8 +105,8 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
 
         //FORE TESTING ONLY#####################################################################
         intent2 = new Intent(this, ScoreBoard.class);
-        startBtn = (Button) findViewById(R.id.Test_Button);
-        startBtn.setOnClickListener(new View.OnClickListener() {
+        scoreBtn = (Button) findViewById(R.id.Test_Button);
+        scoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                     startActivity(intent2);
