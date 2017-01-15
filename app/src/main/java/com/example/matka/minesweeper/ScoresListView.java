@@ -15,6 +15,7 @@ import com.google.android.gms.maps.*;
 
 import java.util.ArrayList;
 
+import data.RecordObj;
 
 
 public class ScoresListView extends Fragment {

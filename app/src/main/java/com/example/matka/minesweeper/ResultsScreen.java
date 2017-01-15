@@ -1,7 +1,6 @@
 package com.example.matka.minesweeper;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +14,10 @@ import android.text.InputType;
 import android.widget.EditText;
 import android.content.DialogInterface;
 import android.widget.Toast;
+
+import data.RecordObj;
+import data.ScoreTable;
+import data.SharedPreferencesHandler;
 
 /**
  * Created by matka on 10/12/16.
@@ -42,21 +45,24 @@ public class ResultsScreen extends AppCompatActivity {
         smiley = (ImageView)findViewById(R.id.sad_smiley_icon_for_results);
         String username;
 
+        ScoreTable table = SharedPreferencesHandler.getData(this);
 
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Scores", 0);
+        //SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Scores", 0);
 
         if (getIntent().getStringExtra("status").equals("win")){
-
             String level = getIntent().getStringExtra("level");
-            int bestScore = sharedPref.getInt(level, 0);
+            //int bestScore = sharedPref.getInt(level, 0);
             int result  = Integer.parseInt(getIntent().getStringExtra("result"));
+
             TextView finalTime = (TextView)findViewById(R.id.textViewTime);
             finalTime.setText("Your Time: " + (result/60<10?"0":"")+result/60+":"+(result%60<10?"0":"")+result%60);
-            if(result<bestScore || bestScore==0){
+            if(table.isNewRecord(level,result)){
                 username = registerUserWithNewRecord();
-                SharedPreferences.Editor editor = sharedPref.edit();
+                table.newRecord(new RecordObj(username, result,"AAA", level));
+                SharedPreferencesHandler.saveScoreBoard(this,table);
+/*                SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt(level, result);
-                editor.apply();
+                editor.apply();*/
             }
             title.setText(winTitle);
             Drawable victorySmile = getResources().getDrawable(R.drawable.victory_smiley,getTheme());

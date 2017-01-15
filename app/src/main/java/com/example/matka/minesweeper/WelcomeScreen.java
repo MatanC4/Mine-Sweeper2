@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 
 import bl.Level;
 import components.LevelButton;
+import data.RecordObj;
+import data.ScoreTable;
+import data.SharedPreferencesHandler;
 
 
 public class WelcomeScreen extends AppCompatActivity implements View.OnClickListener {
@@ -26,6 +30,8 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     private int easyBS, mediumBS, hardBS;
     private Intent intent;
     private Button testBtn;  // to be removed after test
+    private Intent intent2; // to be removed after test
+    private MenuItem menuItem;
     Intent intent2; // to be removed after test
     private Button scoreBtn;
 
@@ -33,18 +39,50 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        readHighScores();
+        //readHighScores();
+        readNewHighScores();
         setContentView(R.layout.activity_welcome__screen);
         bindUI();
+
+        //dummyWriteToPreferences();
+        dummyReadFromPreferences();
+    }
+
+    private void readNewHighScores() {
+        ScoreTable table = SharedPreferencesHandler.getData(this);
+        hardBS = table.getHardScoreTable().get(0).getScore();
+        mediumBS = table.getMediumScoreTable().get(0).getScore();
+        easyBS = table.getEasyScoreTable().get(0).getScore();
+    }
+
+    private void dummyReadFromPreferences() {
+        ScoreTable table = SharedPreferencesHandler.getData(this);
+        for(RecordObj ro : table.getEasyScoreTable())
+            Log.d("Easy: ", ro.toString());
+        for(RecordObj ro : table.getMediumScoreTable())
+            Log.d("Medium: ", ro.toString());
+        for(RecordObj ro : table.getHardScoreTable())
+            Log.d("Hard: ", ro.toString());
+    }
+
+    private void dummyWriteToPreferences() {
+        ScoreTable table = new ScoreTable();
+        table.getEasyScoreTable().add(new RecordObj("a",100,"a","easy"));
+        table.getEasyScoreTable().add(new RecordObj("a",99,"a","easy"));
+        table.getMediumScoreTable().add(new RecordObj("a",88,"a","medium"));
+        table.getMediumScoreTable().add(new RecordObj("a",98,"a","medium"));
+        table.getHardScoreTable().add(new RecordObj("a",88,"a","hard"));
+        table.getHardScoreTable().add(new RecordObj("a",98,"a","hard"));
+        SharedPreferencesHandler.saveScoreBoard(this,table);
     }
 
     private void readHighScores() {
 
         SharedPreferences scoresDB = getApplicationContext().getSharedPreferences("Scores", 0);
         /// clear the shared pref
-        SharedPreferences.Editor editor = scoresDB.edit();
+/*      SharedPreferences.Editor editor = scoresDB.edit();
         editor.putInt("easy",0);
-        editor.apply();
+        editor.apply();*/
         ////////////////////////
         easyBS = scoresDB.getInt(Level.easy.toString(), 0);
         mediumBS = scoresDB.getInt(Level.medium.toString(), 0);
