@@ -3,6 +3,7 @@ package com.example.matka.minesweeper;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import java.util.List;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.app.ActionBar;
 
@@ -29,22 +31,30 @@ public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFra
 
     //private MyScoresMap mp;
     private GoogleMap myMap;
-    Fragment mp;
+    private MyScoresMap  myScoreMap;
+    private ScoresListView scoreListview;
+
     DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
     ViewPager mViewPager;
+    private Button changeMode;
+    private boolean viewMap = false;
+    private FragmentManager fm;
+    private FragmentTransaction transaction;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_board);
-
-        MyScoresMap myScoreMap = (MyScoresMap)getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-        if (myScoreMap==null){
-            myScoreMap = MyScoresMap.newInstance();
-            getSupportFragmentManager().beginTransaction().add(R.id.frame_layout,myScoreMap).commit();
-        }
+        fm = getSupportFragmentManager();
+        transaction = fm.beginTransaction();
+        scoreListview = ScoresListView.newInstance();
+        myScoreMap = MyScoresMap.newInstance();
+        transaction.replace(R.id.frame_layout, scoreListview);
+        transaction.commit();
 
         bindUi();
-        mDemoCollectionPagerAdapter =  new DemoCollectionPagerAdapter(getSupportFragmentManager(),myScoreMap);
+
+
+        //mDemoCollectionPagerAdapter =  new DemoCollectionPagerAdapter(getSupportFragmentManager(),myScoreMap);
 
         //MyScoresMap myScoreMap = (MyScoresMap) mDemoCollectionPagerAdapter.getItem(1);
 
@@ -53,9 +63,33 @@ public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFra
 
     private void bindUi() {
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mDemoCollectionPagerAdapter);
+        //mViewPager = (ViewPager) findViewById(R.id.pager);
+        //mViewPager.setAdapter(mDemoCollectionPagerAdapter);
+        changeMode = (Button) findViewById(R.id.change_mode);
+        changeMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                transaction = fm.beginTransaction();
+                if (viewMap){
+                    if (scoreListview == null){
+                        scoreListview = ScoresListView.newInstance();
+                    }
+                    transaction.replace(R.id.frame_layout, scoreListview);
+                    transaction.commit();
+                }else{
+                    if (myScoreMap==null){
+                        myScoreMap = MyScoresMap.newInstance();
+                    }
 
+                    transaction.replace(R.id.frame_layout, myScoreMap);
+                    transaction.commit();
+
+                }
+                viewMap = !viewMap;
+               // transaction.addToBackStack(null);
+                //transaction.commitAllowingStateLoss();
+            }
+        });
     }
 
     @Override

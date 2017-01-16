@@ -10,11 +10,11 @@ import com.google.android.gms.maps.MapFragment;
  */
 
     public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
-        private MyScoresMap context;
+        private MyScoresMap map;
 
-        public DemoCollectionPagerAdapter(FragmentManager fm , MyScoresMap context) {
+        public DemoCollectionPagerAdapter(FragmentManager fm , MyScoresMap map) {
             super(fm);
-            this.context = context;
+            this.map = map;
         }
 
         @Override
@@ -30,7 +30,7 @@ import com.google.android.gms.maps.MapFragment;
                      // myScoremMap = MyScoresMap.newInstance();
                     //context.getSupportFragmentManager().beginTransaction().add(R.id.frame_layout,myScoremMap).commit();
                     //}
-                    return context;
+                    return map;
                 default:
                     return null;
             }
