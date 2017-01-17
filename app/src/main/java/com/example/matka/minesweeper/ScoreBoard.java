@@ -27,7 +27,7 @@ import data.ScoreTable;
 import data.SharedPreferencesHandler;
 
 
-public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFragmentInteractionListener , OnMapReadyCallback  {
+public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFragmentInteractionListener   {
 
     //private MyScoresMap mp;
     private GoogleMap myMap;
@@ -97,7 +97,7 @@ public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFra
 
     }
 
-   @Override
+   /*@Override
     public void onMapReady(GoogleMap googleMap) {
         myMap = googleMap;
        ScoreTable st = SharedPreferencesHandler.getData(this);
@@ -111,7 +111,7 @@ public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFra
        myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
 
-    }
+    }*/
 
 
     public void addMarkerToMap(int lat, int lon){
