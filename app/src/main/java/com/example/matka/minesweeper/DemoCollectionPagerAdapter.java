@@ -9,31 +9,27 @@ import com.google.android.gms.maps.MapFragment;
  * Created by matka on 13/01/17.
  */
 
-    public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
-        private MyScoresMap map;
+public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
+    private MyScoresMap map;
+    private ScoresListView scoresListView;
 
-        public DemoCollectionPagerAdapter(FragmentManager fm , MyScoresMap map) {
-            super(fm);
-            this.map = map;
+    public DemoCollectionPagerAdapter(FragmentManager fm , MyScoresMap map ,ScoresListView scoresListView) {
+        super(fm);
+        this.map = map;
+        this.scoresListView = scoresListView;
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+
+        switch (position) {
+            case 0:
+                return this.scoresListView;
+            case 1:
+                return this.map;
+            default:
+                return null;
         }
-
-        @Override
-        public Fragment getItem(int position) {
-
-            switch (position) {
-                case 0:
-                    ScoresListView tab1 = new ScoresListView();
-                    return tab1;
-                case 1:
-                    //MyScoresMap myScoremMap = (MyScoresMap) context.getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-                    //if (myScoremMap==null){
-                     // myScoremMap = MyScoresMap.newInstance();
-                    //context.getSupportFragmentManager().beginTransaction().add(R.id.frame_layout,myScoremMap).commit();
-                    //}
-                    return map;
-                default:
-                    return null;
-            }
 
            /* Fragment fragment = new MyScoresMap();
             Bundle args = new Bundle();
@@ -44,20 +40,20 @@ import com.google.android.gms.maps.MapFragment;
 
             fragment.setArguments(args);
             return fragment;*/
-            }
+    }
 
-            @Override
-            public int getCount () {
-                return 2;
-            }
+    @Override
+    public int getCount () {
+        return 2;
+    }
 
-            @Override
-            public CharSequence getPageTitle ( int position){
-                if (position == 0)
-                    return ("Score Table");
-                else
-                    return ("MyScoresMap View");
-            }
-        }
+    @Override
+    public CharSequence getPageTitle ( int position){
+        if (position == 0)
+            return ("Score Table");
+        else
+            return ("Map View");
+    }
+}
 
 

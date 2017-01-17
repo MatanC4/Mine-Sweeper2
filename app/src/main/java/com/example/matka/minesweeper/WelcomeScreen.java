@@ -1,9 +1,18 @@
 package com.example.matka.minesweeper;
 
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +20,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import bl.Level;
 import components.LevelButton;
@@ -19,8 +34,9 @@ import data.ScoreTable;
 import data.SharedPreferencesHandler;
 
 
-public class WelcomeScreen extends AppCompatActivity implements View.OnClickListener {
+public class WelcomeScreen extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener , GoogleApiClient.ConnectionCallbacks , com.google.android.gms.location.LocationListener {
 
+    final int PERMISSION_LOCATION = 111;
     private LevelButton[] levelButtons = new LevelButton[3];
     private Button easyBtn;
     private Button medBtn;
@@ -32,8 +48,9 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     private Button testBtn;  // to be removed after test
     private Intent intent2; // to be removed after test
     private MenuItem menuItem;
-
+    private GoogleApiClient googleApiClient;
     private Button scoreBtn;
+    private Location location;
 
 
     @Override
@@ -43,6 +60,10 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         readNewHighScores();
         setContentView(R.layout.activity_welcome__screen);
         bindUI();
+        googleApiClient = new GoogleApiClient.Builder(this).
+                enableAutoManage(this,this).addConnectionCallbacks(this).addApi(LocationServices.API).build();
+
+
 
         //dummyWriteToPreferences();
         //dummyReadFromPreferences();
@@ -112,16 +133,7 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
                     startActivity(intent2);
             }
         });
-
-
-
-
-
-
         //FORE TESTING ONLY#####################################################################
-
-
-
         setButtons();
         readLastPlayed();
 
@@ -183,6 +195,75 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     }
 
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)!=
+                PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},PERMISSION_LOCATION);
+        }else{
+         startLocationServices();
+        }
+
+    }
 
 
+    public void startLocationServices() {
+        Log.v("Maps" ,"starting location services called");
+
+        try {
+            LocationRequest req = LocationRequest.create().
+                    setPriority(LocationRequest.PRIORITY_LOW_POWER);
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, req,this);
+        }catch (SecurityException exception){
+            Toast.makeText(WelcomeScreen.this, "Cant get location until we get persmission :(", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode , @NonNull  String[] permissions,@NonNull int[] grantresults){
+        super.onRequestPermissionsResult(requestCode,permissions,grantresults);
+        switch (requestCode){
+            case PERMISSION_LOCATION:{
+               if((grantresults.length > 0) && grantresults[0] == PackageManager.PERMISSION_GRANTED)
+                   startLocationServices();
+               else{
+                   Toast.makeText(WelcomeScreen.this, "Cant get location until we get persmission :(", Toast.LENGTH_SHORT).show();
+               }
+            }
+        }
+    }
+
+
+    @Override
+    protected void onStart(){
+        googleApiClient.connect();
+        super.onStart();
+
+    }
+
+
+
+    @Override
+    protected void onStop(){
+        googleApiClient.disconnect();
+        super.onStop();
+    }
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.v("Map" , "Lon:" + location.getLongitude()  + location.getLatitude());
+        this.location = location;
+    }
+
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }
