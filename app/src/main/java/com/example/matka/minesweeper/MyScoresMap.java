@@ -42,7 +42,7 @@ public class MyScoresMap extends Fragment implements OnMapReadyCallback  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map_fragment_map_layout);
+               .findFragmentById(R.id.map_fragment_map_layout);
         mapFragment.getMapAsync(this);
 
         return view;

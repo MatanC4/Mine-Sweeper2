@@ -114,6 +114,11 @@ public class ScoresListView extends Fragment {
         mListener = null;
     }
 
+    public static ScoresListView newInstance() {
+        ScoresListView fragment = new ScoresListView();
+        return fragment;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

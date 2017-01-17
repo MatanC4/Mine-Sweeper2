@@ -32,6 +32,7 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     private Button testBtn;  // to be removed after test
     private Intent intent2; // to be removed after test
     private MenuItem menuItem;
+
     private Button scoreBtn;
 
 
