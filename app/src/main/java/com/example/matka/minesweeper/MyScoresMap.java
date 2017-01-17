@@ -2,12 +2,15 @@ package com.example.matka.minesweeper;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,14 +29,18 @@ import data.SharedPreferencesHandler;
 /**
  * Created by matka on 13/01/17.
  */
-public class MyScoresMap extends Fragment implements OnMapReadyCallback  {
+public class MyScoresMap extends Fragment implements OnMapReadyCallback {
     private GoogleMap myMap;
+    public static FragmentManager fm;
+    public  static FragmentTransaction transaction;
+
     public MyScoresMap() {
 
     }
 
     public static MyScoresMap newInstance()  {
         MyScoresMap fragment = new MyScoresMap();
+
         return fragment;
     }
 
@@ -41,9 +48,17 @@ public class MyScoresMap extends Fragment implements OnMapReadyCallback  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-               .findFragmentById(R.id.map_fragment_map_layout);
-        mapFragment.getMapAsync(this);
+
+        SupportMapFragment supportmapFragment = (SupportMapFragment)
+                getChildFragmentManager().findFragmentById(R.id.map_fragment_map_layout);
+        supportmapFragment.getMapAsync(this);
+
+
+        /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map_fragment_map_layout);
+       mapFragment.getMapAsync(this);*/
+
+
 
         return view;
 

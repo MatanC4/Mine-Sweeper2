@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.app.ActionBar;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.MapFragment;
@@ -27,9 +30,9 @@ import data.ScoreTable;
 import data.SharedPreferencesHandler;
 
 
-public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFragmentInteractionListener   {
+public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFragmentInteractionListener  {
 
-    //private MyScoresMap mp;
+    private MyScoresMap mp;
     private GoogleMap myMap;
     private MyScoresMap  myScoreMap;
     private ScoresListView scoreListview;
@@ -48,24 +51,39 @@ public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFra
         transaction = fm.beginTransaction();
         scoreListview = ScoresListView.newInstance();
         myScoreMap = MyScoresMap.newInstance();
-        transaction.replace(R.id.frame_layout, scoreListview);
-        transaction.commit();
+        //transaction.replace(R.id., scoreListview);
+        //transaction.commit();
 
         bindUi();
+        //LatLng sydney = new LatLng(-34,151);
+        //myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        //myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //GoogleMap map = myScoreMap.getMap();
+
+        // ((Fragment) fm.findFragmentById(R.id.map_fragment_map_layout)).
 
 
-        //mDemoCollectionPagerAdapter =  new DemoCollectionPagerAdapter(getSupportFragmentManager(),myScoreMap);
+        //myScoreMap.transaction.add(R.id.map_fragment_map_layout, myScoreMap);
+        //myScoreMap.transaction.commit();
 
-        //MyScoresMap myScoreMap = (MyScoresMap) mDemoCollectionPagerAdapter.getItem(1);
+
+       /* ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).
+                getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        mMap = googleMap;
+                    }
+                });*/
 
 
     }
 
     private void bindUi() {
+        mDemoCollectionPagerAdapter =  new DemoCollectionPagerAdapter(getSupportFragmentManager(),myScoreMap, scoreListview);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mDemoCollectionPagerAdapter);
 
-        //mViewPager = (ViewPager) findViewById(R.id.pager);
-        //mViewPager.setAdapter(mDemoCollectionPagerAdapter);
-        changeMode = (Button) findViewById(R.id.change_mode);
+       /* changeMode = (Button) findViewById(R.id.change_mode);
         changeMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,39 +107,29 @@ public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFra
                // transaction.addToBackStack(null);
                 //transaction.commitAllowingStateLoss();
             }
-        });
+        });**/
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+
     }
 
-   /*@Override
-    public void onMapReady(GoogleMap googleMap) {
-        myMap = googleMap;
-       ScoreTable st = SharedPreferencesHandler.getData(this);
-       ArrayList<RecordObj> scores = st.getScoreTable();
-       for(RecordObj r :scores ){
-           r.getLocation();
-       }
-
-       LatLng sydney = new LatLng(-34,151);
-       myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-       myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
 
-    }*/
 
 
-    public void addMarkerToMap(int lat, int lon){
+
+
+    /*public void addMarkerToMap(int lat, int lon){
         if(myMap == null)
             return;
         LatLng sydney = new LatLng(lat,lon);
         myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
-    }
+    }*/
 
 }
 
