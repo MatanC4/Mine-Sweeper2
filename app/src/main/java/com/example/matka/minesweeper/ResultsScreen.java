@@ -2,18 +2,26 @@ package com.example.matka.minesweeper;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.identity.intents.Address;
+
 import android.text.InputType;
 import android.widget.EditText;
 import android.content.DialogInterface;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import data.RecordObj;
 import data.ScoreTable;
@@ -24,6 +32,9 @@ import data.SharedPreferencesHandler;
  */
 public class ResultsScreen extends AppCompatActivity {
 
+    private final double BARMUDA_TRIANGLE_LONG = -73.086548;
+    private final double BARMUDA_TRIANGL_LAT = 27.132481;
+    private final String UNKONOWN = "Unknown";
     private TextView title;
     private String winTitle = "Well done!";
 
@@ -58,11 +69,27 @@ public class ResultsScreen extends AppCompatActivity {
             finalTime.setText("Your Time: " + (result/60<10?"0":"")+result/60+":"+(result%60<10?"0":"")+result%60);
             if(table.isNewRecord(level,result)){
                 username = registerUserWithNewRecord();
-                table.newRecord(new RecordObj(username, result,"AAA", level));
+                double longitude = getIntent().getDoubleExtra("long",-1);
+                double latitude = getIntent().getDoubleExtra("lat",-1);
+                if(longitude == 200 || latitude == 200){
+                    longitude = BARMUDA_TRIANGLE_LONG;
+                    latitude = BARMUDA_TRIANGL_LAT;
+                }
+                Geocoder geocoder;
+                List<android.location.Address> addresses = null;
+                geocoder = new Geocoder(this, Locale.getDefault());
+
+                try {
+                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                    //addresses = geocoder.getFromLocation( -33.865143, 151.209900, 1);
+                } catch (IOException e) {
+                }
+                if(addresses.size()>0)
+                    table.newRecord(new RecordObj(username, result,addresses.get(0).getAddressLine(0), level));
+                else
+                    table.newRecord(new RecordObj(username, result,UNKONOWN, level));
+
                 SharedPreferencesHandler.saveScoreBoard(this,table);
-/*                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putInt(level, result);
-                editor.apply();*/
             }
             title.setText(winTitle);
             Drawable victorySmile = getResources().getDrawable(R.drawable.victory_smiley,getTheme());
@@ -118,7 +145,4 @@ public class ResultsScreen extends AppCompatActivity {
         Intent intent  = new Intent(this,WelcomeScreen.class);
         return intent;
     }
-
-
-
 }

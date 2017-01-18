@@ -54,6 +54,7 @@ public class TileButton extends ImageButton implements View.OnClickListener {
     public void reveal() {
         isRevealed = true;
     }
+    public void unReveal(){isRevealed = false; }
 
     public boolean isFlagged(){
         return isFlagged;

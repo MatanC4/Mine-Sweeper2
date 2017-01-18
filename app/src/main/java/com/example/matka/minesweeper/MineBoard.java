@@ -282,6 +282,8 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
             intent.putExtra("status", "win");
         }else{
             intent.putExtra("status", "lose");
+            intent.putExtra("long", getIntent().getDoubleExtra("long",200));
+            intent.putExtra("lat", getIntent().getDoubleExtra("lat",200));
         }
         intent.putExtra("result",String.valueOf(counter));
         intent.putExtra("level", level);
@@ -366,6 +368,7 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
                 ArrayList<CellResult> changes = gameLogic.addMime();
                 mineCount.setText(""+gameLogic.getNumOFMines());
                 board[changes.get(0).getCol()][changes.get(0).getRow()].setBackgroundResource(resultsMapping.get(11));
+                board[changes.get(0).getCol()][changes.get(0).getRow()].unReveal();
                 for(int i = 1; i<changes.size();i++)
                     board[changes.get(i).getCol()][changes.get(i).getRow()].setBackgroundResource(resultsMapping.get(changes.get(i).getValue()));
             }

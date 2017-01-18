@@ -1,9 +1,12 @@
 package com.example.matka.minesweeper;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +23,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
+import components.MapReadyListener;
 import data.RecordObj;
 import data.ScoreTable;
 import data.SharedPreferencesHandler;
@@ -30,12 +37,22 @@ import data.SharedPreferencesHandler;
  * Created by matka on 13/01/17.
  */
 public class MyScoresMap extends Fragment implements OnMapReadyCallback {
+
+    private final double BARMUDA_TRIANGLE_LONG = -70.086548;
+    private final double BARMUDA_TRIANGL_LAT = 23.132481;
+
     private GoogleMap myMap;
-    public static FragmentManager fm;
-    public  static FragmentTransaction transaction;
+    private static FragmentManager fm;
+    private  static FragmentTransaction transaction;
+    private MarkerOptions userMarker;
+    private MapReadyListener listener;
 
     public MyScoresMap() {
 
+    }
+
+    public void setListener(MapReadyListener listener){
+        this.listener = listener;
     }
 
     public static MyScoresMap newInstance()  {
@@ -72,14 +89,38 @@ public class MyScoresMap extends Fragment implements OnMapReadyCallback {
         ScoreTable st = SharedPreferencesHandler.getData(getContext());
         ArrayList<RecordObj> scores = st.getScoreTable();
         for(RecordObj r :scores ){
-            r.getLocation();
+            Geocoder geocoder = new Geocoder(getContext(),Locale.getDefault());
+            List<Address> addresses;
+            double latitude;
+            double longitude;
+            try{
+                addresses = geocoder.getFromLocationName(r.getLocation(), 1);
+                if(addresses.size() > 0) {
+                    latitude = addresses.get(0).getLatitude();
+                    longitude = addresses.get(0).getLongitude();
+                    myMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude))).setTitle(addresses.get(0).getAddressLine(0));
+                }
+                else{
+                }
+            }catch (IOException e) {
+                myMap.addMarker(new MarkerOptions().position(new LatLng(BARMUDA_TRIANGL_LAT,BARMUDA_TRIANGLE_LONG))).setTitle("Unknown Address");
+                Log.d("Marker", "unknown");
+            }
+
         }
 
-        LatLng sydney = new LatLng(-34,151);
-        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+/*        LatLng sydney = new LatLng(-34,151);
+        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));*/
+        listener.mapReadyNotification();
+ /*       myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
 
 
+    }
+
+    public void markUserLocation(LatLng latLng){
+        userMarker = new MarkerOptions().position(latLng).title("Current Location");
+        myMap.addMarker(userMarker);
+        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,3));
     }
 }
 //Integer.toString(args.getInt(ARG_OBJECT))

@@ -25,111 +25,46 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import components.MapReadyListener;
 import data.RecordObj;
 import data.ScoreTable;
 import data.SharedPreferencesHandler;
 
 
-public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFragmentInteractionListener  {
+public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFragmentInteractionListener, MapReadyListener {
+    @Override
+    public void mapReadyNotification() {
+        LatLng latLng = new LatLng(getIntent().getDoubleExtra("lat",100),getIntent().getDoubleExtra("long",5));
+        myScoreMap.markUserLocation(latLng);
+    }
 
-    private MyScoresMap mp;
-    private GoogleMap myMap;
     private MyScoresMap  myScoreMap;
     private ScoresListView scoreListview;
 
     DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
     ViewPager mViewPager;
-    private Button changeMode;
-    private boolean viewMap = false;
     private FragmentManager fm;
-    private FragmentTransaction transaction;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_board);
         fm = getSupportFragmentManager();
-        transaction = fm.beginTransaction();
         scoreListview = ScoresListView.newInstance();
         myScoreMap = MyScoresMap.newInstance();
-        //transaction.replace(R.id., scoreListview);
-        //transaction.commit();
-
+        myScoreMap.setListener(this);
         bindUi();
-        //LatLng sydney = new LatLng(-34,151);
-        //myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        //GoogleMap map = myScoreMap.getMap();
-
-        // ((Fragment) fm.findFragmentById(R.id.map_fragment_map_layout)).
-
-
-        //myScoreMap.transaction.add(R.id.map_fragment_map_layout, myScoreMap);
-        //myScoreMap.transaction.commit();
-
-
-       /* ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).
-                getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        mMap = googleMap;
-                    }
-                });*/
-
-
     }
-
     private void bindUi() {
         mDemoCollectionPagerAdapter =  new DemoCollectionPagerAdapter(getSupportFragmentManager(),myScoreMap, scoreListview);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
 
-       /* changeMode = (Button) findViewById(R.id.change_mode);
-        changeMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                transaction = fm.beginTransaction();
-                if (viewMap){
-                    if (scoreListview == null){
-                        scoreListview = ScoresListView.newInstance();
-                    }
-                    transaction.replace(R.id.frame_layout, scoreListview);
-                    transaction.commit();
-                }else{
-                    if (myScoreMap==null){
-                        myScoreMap = MyScoresMap.newInstance();
-                    }
-
-                    transaction.replace(R.id.frame_layout, myScoreMap);
-                    transaction.commit();
-
-                }
-                viewMap = !viewMap;
-               // transaction.addToBackStack(null);
-                //transaction.commitAllowingStateLoss();
-            }
-        });**/
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-
     }
-
-
-
-
-
-
-
-    /*public void addMarkerToMap(int lat, int lon){
-        if(myMap == null)
-            return;
-        LatLng sydney = new LatLng(lat,lon);
-        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-    }*/
 
 }
 

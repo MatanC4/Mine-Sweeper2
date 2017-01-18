@@ -16,14 +16,12 @@ import com.google.android.gms.maps.*;
 import java.util.ArrayList;
 
 import data.RecordObj;
+import data.ScoreTable;
+import data.SharedPreferencesHandler;
 
 
 public class ScoresListView extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    //private static final String ARG_PARAM1 = "param1";
-    //private static final String ARG_PARAM2 = "param2";
-    //public static final String ARG_OBJECT = "object";
+
     ArrayList<String> recordList;
 
     // TODO: Rename and change types of parameters
@@ -37,33 +35,17 @@ public class ScoresListView extends Fragment {
     }
 
 
-    // TODO: Rename and change types and number of parameters
-   /* public static ScoresListView newInstance(String param1, String param2) {
-        ScoresListView fragment = new ScoresListView();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }**/
-
-  /*  @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }**/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_scores_list_view, container, false);
 
-        recordList = new ArrayList<String>();
-        for (int i = 0; i<100; i++){
-            recordList.add("Matan Cohen    Dizingoff 204      level - easy     2 sec");
+        ScoreTable table = SharedPreferencesHandler.getData(getContext());
+        recordList = new ArrayList<>();
+        ArrayList<RecordObj> recordObjs = table.getScoreTable();
+        for (RecordObj ro : recordObjs){
+            recordList.add(ro.toString());
         }
         ListView listView = (ListView) view.findViewById(R.id.listViewScores);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,

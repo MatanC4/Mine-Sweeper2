@@ -34,9 +34,13 @@ import data.ScoreTable;
 import data.SharedPreferencesHandler;
 
 
-public class WelcomeScreen extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener , GoogleApiClient.ConnectionCallbacks , com.google.android.gms.location.LocationListener {
 
-    final int PERMISSION_LOCATION = 111;
+
+public class WelcomeScreen extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener , GoogleApiClient.ConnectionCallbacks , com.google.android.gms.location.LocationListener {
+    private final double BARMUDA_TRIANGLE_LONG = -73.086548;
+    private final double BARMUDA_TRIANGL_LAT = 27.132481;
+    private final int PERMISSION_LOCATION = 111;
+
     private LevelButton[] levelButtons = new LevelButton[3];
     private Button easyBtn;
     private Button medBtn;
@@ -51,12 +55,14 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     private GoogleApiClient googleApiClient;
     private Button scoreBtn;
     private Location location;
+    private double longitude = BARMUDA_TRIANGLE_LONG;
+    private double latitude = BARMUDA_TRIANGL_LAT;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //readHighScores();
+        //dummyWriteToPreferences();
         readNewHighScores();
         setContentView(R.layout.activity_welcome__screen);
         bindUI();
@@ -65,15 +71,18 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
 
 
 
-        //dummyWriteToPreferences();
+
         //dummyReadFromPreferences();
     }
 
-        private void readNewHighScores() {
+    private void readNewHighScores() {
         ScoreTable table = SharedPreferencesHandler.getData(this);
-        hardBS = table.getHardScoreTable().get(0).getScore();
-        mediumBS = table.getMediumScoreTable().get(0).getScore();
-        easyBS = table.getEasyScoreTable().get(0).getScore();
+        if(table.getHardScoreTable().size()>0)
+            hardBS = table.getHardScoreTable().get(0).getScore();
+        if(table.getMediumScoreTable().size()>0)
+            mediumBS = table.getMediumScoreTable().get(0).getScore();
+        if(table.getEasyScoreTable().size()>0)
+            easyBS = table.getEasyScoreTable().get(0).getScore();
     }
 
     private void dummyReadFromPreferences() {
@@ -97,20 +106,6 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         SharedPreferencesHandler.saveScoreBoard(this,table);
     }
 
-    private void readHighScores() {
-
-        SharedPreferences scoresDB = getApplicationContext().getSharedPreferences("Scores", 0);
-        /// clear the shared pref
-/*      SharedPreferences.Editor editor = scoresDB.edit();
-        editor.putInt("easy",0);
-        editor.apply();*/
-        ////////////////////////
-        easyBS = scoresDB.getInt(Level.easy.toString(), 0);
-        mediumBS = scoresDB.getInt(Level.medium.toString(), 0);
-        hardBS = scoresDB.getInt(Level.hard.toString(), 0);
-
-
-    }
 
     public void bindUI() {
         intent = new Intent(this, MineBoard.class);
@@ -126,6 +121,12 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
 
         //FORE TESTING ONLY#####################################################################
         intent2 = new Intent(this, ScoreBoard.class);
+        if(location != null){
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+        }
+        intent2.putExtra("long", this.longitude);
+        intent2.putExtra("lat", this.latitude);
         scoreBtn = (Button) findViewById(R.id.Test_Button);
         scoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,9 +157,6 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         hardBtn.setOnClickListener(this);
         TextView txtviewhard = (TextView) findViewById(R.id.hardLabel);
         txtviewhard.setText("Best Time: " + (hardBS == 0 ? "n/a" : hardBS + "s"));
-
-
-
     }
 
     private void readLastPlayed() {
@@ -177,6 +175,8 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.level1:
                 intent.putExtra("level", Level.easy.toString());
+                intent.putExtra("long", this.longitude);
+                intent.putExtra("lat", this.latitude);
                 startBtn.setText("START\n" + Level.easy.toString());
                 startBtn.setTextColor(Color.parseColor("#D7FF33"));
 
@@ -208,8 +208,7 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
 
 
     public void startLocationServices() {
-        Log.v("Maps" ,"starting location services called");
-
+        Log.d("Maps" ,"starting location services called");
         try {
             LocationRequest req = LocationRequest.create().
                     setPriority(LocationRequest.PRIORITY_LOW_POWER);
@@ -228,8 +227,11 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
                if((grantresults.length > 0) && grantresults[0] == PackageManager.PERMISSION_GRANTED)
                    startLocationServices();
                else{
+                   Log.d("map","Cant get location until we get persmission :(");
                    Toast.makeText(WelcomeScreen.this, "Cant get location until we get persmission :(", Toast.LENGTH_SHORT).show();
                }
+
+                break;
             }
         }
     }
@@ -256,7 +258,7 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.v("Map" , "Lon:" + location.getLongitude()  + location.getLatitude());
+        Log.d("Map" , "Lon:" + location.getLongitude()  + location.getLatitude());
         this.location = location;
     }
 
