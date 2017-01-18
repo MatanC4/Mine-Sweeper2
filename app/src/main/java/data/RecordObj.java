@@ -53,7 +53,7 @@ public class RecordObj implements Comparable<RecordObj> {
     public String toString() {
         return
                 "userName: " + userName + '\'' +
-                ", score: " + score +
+                ", time: " + score +
                 ", location: " + location + '\'' +
                 ", level: " + level
                 ;

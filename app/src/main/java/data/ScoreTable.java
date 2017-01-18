@@ -29,14 +29,14 @@ public class ScoreTable {
         Collections.sort(easyLevel);
         Collections.sort(mediumLevel);
         Collections.sort(hardLevel);
-
     }
 
     public ArrayList<RecordObj> getScoreTable(){
-        ArrayList appendLevels = new ArrayList();
+        ArrayList<RecordObj>appendLevels = new ArrayList();
         appendLevels.addAll(hardLevel);
         appendLevels.addAll(mediumLevel);
         appendLevels.addAll(easyLevel);
+        Collections.sort(appendLevels);
         return appendLevels;
     }
 

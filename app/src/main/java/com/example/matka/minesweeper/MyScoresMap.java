@@ -6,18 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -40,7 +34,6 @@ public class MyScoresMap extends Fragment implements OnMapReadyCallback {
 
     private final double BARMUDA_TRIANGLE_LONG = -70.086548;
     private final double BARMUDA_TRIANGL_LAT = 23.132481;
-
     private GoogleMap myMap;
     private static FragmentManager fm;
     private  static FragmentTransaction transaction;
@@ -79,7 +72,13 @@ public class MyScoresMap extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         myMap = googleMap;
-        ScoreTable st = SharedPreferencesHandler.getData(getContext());
+        ScoreTable st;
+        try{
+            st = SharedPreferencesHandler.getData(getContext());
+        }
+        catch (Exception e){
+            st = new ScoreTable();
+        }
         ArrayList<RecordObj> scores = st.getScoreTable();
         for(RecordObj r :scores ){
             Geocoder geocoder = new Geocoder(getContext(),Locale.getDefault());
@@ -105,6 +104,6 @@ public class MyScoresMap extends Fragment implements OnMapReadyCallback {
     public void markUserLocation(LatLng latLng){
         userMarker = new MarkerOptions().position(latLng).title("Current Location");
         myMap.addMarker(userMarker);
-        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,3));
+        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
     }
 }

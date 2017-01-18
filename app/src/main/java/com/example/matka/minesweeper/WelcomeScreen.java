@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.event.Event;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
@@ -63,8 +65,12 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //dummyWriteToPreferences();
-        readNewHighScores();
+        try {
+            readNewHighScores();
+        }
+        catch(Exception e){
+            SharedPreferencesHandler.saveScoreBoard(this, new ScoreTable());
+        }
         setContentView(R.layout.activity_welcome__screen);
         bindUI();
         googleApiClient = new GoogleApiClient.Builder(this).
@@ -110,13 +116,11 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!startBtn.getText().equals("START"))
-                    try{
-                        startActivity(intent);
-                    }catch (Exception e){
-
-                    }
-
+            if (!startBtn.getText().equals("START"))
+                try{
+                    startActivity(intent);
+                }catch (Exception e){
+                }
             }
         });
 
@@ -203,13 +207,13 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
 
     }
 
-
     public void startLocationServices() {
         Log.d("Maps" ,"starting location services called");
         try {
             LocationRequest req = LocationRequest.create().
                     setPriority(LocationRequest.PRIORITY_LOW_POWER);
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, req,this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, req ,this);
+            Log.d("Maps" ,"location services called");
         }catch (SecurityException exception){
             Toast.makeText(WelcomeScreen.this, "Cant get location until we get persmission :(", Toast.LENGTH_SHORT).show();
         }
@@ -221,13 +225,14 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         super.onRequestPermissionsResult(requestCode,permissions,grantresults);
         switch (requestCode){
             case PERMISSION_LOCATION:{
-               if((grantresults.length > 0) && grantresults[0] == PackageManager.PERMISSION_GRANTED)
+               if((grantresults.length > 0) && grantresults[0] == PackageManager.PERMISSION_GRANTED) {
+                   Log.d("permission", "granted");
                    startLocationServices();
+               }
                else{
                    Log.d("map","Cant get location until we get persmission :(");
                    Toast.makeText(WelcomeScreen.this, "Cant get location until we get persmission :(", Toast.LENGTH_SHORT).show();
                }
-
                 break;
             }
         }

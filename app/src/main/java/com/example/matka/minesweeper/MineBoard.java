@@ -282,8 +282,8 @@ public class MineBoard extends AppCompatActivity implements TileButtonListener ,
             intent.putExtra("status", "win");
         }else{
             intent.putExtra("status", "lose");
-            intent.putExtra("long", getIntent().getDoubleExtra("long",200));
-            intent.putExtra("lat", getIntent().getDoubleExtra("lat",200));
+            intent.putExtra("long", getIntent().getDoubleExtra("long",500));
+            intent.putExtra("lat", getIntent().getDoubleExtra("lat",500));
         }
         intent.putExtra("result",String.valueOf(counter));
         intent.putExtra("level", level);

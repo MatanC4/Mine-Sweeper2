@@ -20,6 +20,7 @@ import android.content.DialogInterface;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,7 +42,12 @@ public class ResultsScreen extends AppCompatActivity {
     private ImageView smiley;
     private Button playAgainBtn;
     private String timer;
+    private String name;
     private GoogleApiClient client;
+    private ScoreTable table;
+    private int result;
+    private String level;
+    private List<android.location.Address> addresses = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,43 +56,49 @@ public class ResultsScreen extends AppCompatActivity {
 
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
     private void bindUI() {
         playAgainBtn = (Button)findViewById(R.id.play_again_btn);
         title = (TextView)findViewById(R.id.results_screen_title);
         smiley = (ImageView)findViewById(R.id.sad_smiley_icon_for_results);
-        String username;
 
-        ScoreTable table = SharedPreferencesHandler.getData(this);
-
+        try {
+            table = SharedPreferencesHandler.getData(this);
+        }
+        catch (Exception e){
+            table = new ScoreTable();
+        }
 
         if (getIntent().getStringExtra("status").equals("win")){
-            String level = getIntent().getStringExtra("level");
-            int result  = Integer.parseInt(getIntent().getStringExtra("result"));
+            level = getIntent().getStringExtra("level");
+            result  = Integer.parseInt(getIntent().getStringExtra("result"));
 
             TextView finalTime = (TextView)findViewById(R.id.textViewTime);
             finalTime.setText("Your Time: " + (result/60<10?"0":"")+result/60+":"+(result%60<10?"0":"")+result%60);
             if(table.isNewRecord(level,result)){
-                username = registerUserWithNewRecord();
-                double longitude = getIntent().getDoubleExtra("long",-1);
-                double latitude = getIntent().getDoubleExtra("lat",-1);
-                if(longitude == 200 || latitude == 200){
+                double longitude = getIntent().getDoubleExtra("long",500);
+                double latitude = getIntent().getDoubleExtra("lat",500);
+                if(longitude == 500 || latitude == 500){
                     longitude = BARMUDA_TRIANGLE_LONG;
                     latitude = BARMUDA_TRIANGL_LAT;
                 }
                 Geocoder geocoder;
-                List<android.location.Address> addresses = null;
                 geocoder = new Geocoder(this, Locale.getDefault());
-
                 try {
                     addresses = geocoder.getFromLocation(latitude, longitude, 1);
                 } catch (IOException e) {
+                    addresses = new ArrayList<>();
                 }
-                if(addresses.size()>0)
-                    table.newRecord(new RecordObj(username, result,addresses.get(0).getAddressLine(0), level));
-                else
-                    table.newRecord(new RecordObj(username, result,UNKONOWN, level));
+                registerUserWithNewRecord(this);
 
-                SharedPreferencesHandler.saveScoreBoard(this,table);
+
+/*                if(addresses.size()>0)
+                    table.newRecord(new RecordObj(name, result,addresses.get(0).getAddressLine(0), level));
+                else
+                    table.newRecord(new RecordObj(name, result,UNKONOWN, level));*/
             }
             title.setText(winTitle);
             Drawable victorySmile = getResources().getDrawable(R.drawable.victory_smiley,getTheme());
@@ -108,7 +120,18 @@ public class ResultsScreen extends AppCompatActivity {
 
     }
 
-    private String registerUserWithNewRecord() {
+    public void saveRecord(String name){
+        String address;
+        if(addresses.size()>0)
+            address = addresses.get(0).getAddressLine(0);
+        else{
+            address = UNKONOWN;
+        }
+        table.newRecord(new RecordObj(name, result,address, level));
+        SharedPreferencesHandler.saveScoreBoard(this,table);
+    }
+
+    private void registerUserWithNewRecord(final ResultsScreen screen) {
         final EditText input;
         String name;
 
@@ -125,17 +148,17 @@ public class ResultsScreen extends AppCompatActivity {
         builder.setPositiveButton("Save Record", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (input.getText().toString().isEmpty())
+                if (input.getText().toString().isEmpty()) {
                     Toast.makeText(ResultsScreen.this, "Player will be saved as Unknown", Toast.LENGTH_SHORT).show();
+                    screen.saveRecord(UNKONOWN);
+                }
+                else{
+                    screen.saveRecord(input.getText().toString());
+                }
             }
         });
 
         builder.show();
-
-       if(input.getText().toString().isEmpty())
-           return "Unknown";
-        else
-            return input.getText().toString();
     }
 
     private Intent anotherGameIntent() {

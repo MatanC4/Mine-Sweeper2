@@ -14,7 +14,7 @@ import components.MapReadyListener;
 public class ScoreBoard extends FragmentActivity implements ScoresListView.OnFragmentInteractionListener, MapReadyListener {
     @Override
     public void mapReadyNotification() {
-        LatLng latLng = new LatLng(getIntent().getDoubleExtra("lat",100),getIntent().getDoubleExtra("long",5));
+        LatLng latLng = new LatLng(getIntent().getDoubleExtra("lat",200),getIntent().getDoubleExtra("long",200));
         myScoreMap.markUserLocation(latLng);
     }
 

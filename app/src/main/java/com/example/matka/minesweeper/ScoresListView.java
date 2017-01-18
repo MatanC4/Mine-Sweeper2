@@ -40,33 +40,30 @@ public class ScoresListView extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_scores_list_view, container, false);
-
-        ScoreTable table = SharedPreferencesHandler.getData(getContext());
+        ScoreTable table;
+        try{
+            table = SharedPreferencesHandler.getData(getContext());
+        }
+        catch(Exception e){
+            table = new ScoreTable();
+        }
         recordList = new ArrayList<>();
-        ArrayList<RecordObj> recordObjs = table.getScoreTable();
+        ArrayList<RecordObj> recordObjs;
+        recordObjs = table.getScoreTable();
         for (RecordObj ro : recordObjs){
-            recordList.add(ro.toString());
+            try{
+                recordList.add(ro.toString());
+            }
+            catch (Exception e){};
+
         }
         ListView listView = (ListView) view.findViewById(R.id.listViewScores);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,
                 recordList);
-
-
         listView.setAdapter(arrayAdapter);
-
         return view;
     }
 
-
-    public void addRecord(RecordObj record){
-        try {
-            this.recordList.add(record.toString());
-        }
-        catch (Exception e){
-
-        }
-
-    }
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import java.util.Collections;
+
 /**
  * Created by Daniel_m on 14/01/2017.
  */
@@ -28,8 +30,8 @@ public class SharedPreferencesHandler {
         SharedPreferences scoresDB = context.getApplicationContext().getSharedPreferences(DB_NAME, 0);
         String json = scoresDB.getString(DB_TABLE,null);
         Gson gson = new Gson();
-        ScoreTable st = gson.fromJson(json,ScoreTable.class);
-//        st.sortTables();
+        ScoreTable st = gson.fromJson(json, ScoreTable.class);
+        st.sortTables();
         return st;
     }
 }

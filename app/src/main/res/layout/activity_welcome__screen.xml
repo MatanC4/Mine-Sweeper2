@@ -153,7 +153,6 @@
 
 
     </LinearLayout>
-
     <ImageButton
         android:layout_width="140px"
         android:layout_height="140px"
@@ -163,6 +162,4 @@
         android:background="@drawable/scores_trophy_icon"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
-
-
 </RelativeLayout>
