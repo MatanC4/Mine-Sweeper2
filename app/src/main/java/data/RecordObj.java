@@ -51,12 +51,12 @@ public class RecordObj implements Comparable<RecordObj> {
 
     @Override
     public String toString() {
-        return "RecordObj{" +
-                "userName='" + userName + '\'' +
-                ", score=" + score +
-                ", location='" + location + '\'' +
-                ", level='" + level + '\'' +
-                '}';
+        return
+                "userName: " + userName + '\'' +
+                ", score: " + score +
+                ", location: " + location + '\'' +
+                ", level: " + level
+                ;
     }
 
     @Override

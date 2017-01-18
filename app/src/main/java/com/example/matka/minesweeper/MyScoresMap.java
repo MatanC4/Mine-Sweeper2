@@ -70,13 +70,6 @@ public class MyScoresMap extends Fragment implements OnMapReadyCallback {
                 getChildFragmentManager().findFragmentById(R.id.map_fragment_map_layout);
         supportmapFragment.getMapAsync(this);
 
-
-        /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map_fragment_map_layout);
-       mapFragment.getMapAsync(this);*/
-
-
-
         return view;
 
 
@@ -104,17 +97,9 @@ public class MyScoresMap extends Fragment implements OnMapReadyCallback {
                 }
             }catch (IOException e) {
                 myMap.addMarker(new MarkerOptions().position(new LatLng(BARMUDA_TRIANGL_LAT,BARMUDA_TRIANGLE_LONG))).setTitle("Unknown Address");
-                Log.d("Marker", "unknown");
             }
-
         }
-
-/*        LatLng sydney = new LatLng(-34,151);
-        myMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));*/
         listener.mapReadyNotification();
- /*       myMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
-
-
     }
 
     public void markUserLocation(LatLng latLng){
@@ -123,4 +108,3 @@ public class MyScoresMap extends Fragment implements OnMapReadyCallback {
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,3));
     }
 }
-//Integer.toString(args.getInt(ARG_OBJECT))

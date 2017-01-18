@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +54,7 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     private Intent intent2; // to be removed after test
     private MenuItem menuItem;
     private GoogleApiClient googleApiClient;
-    private Button scoreBtn;
+    private ImageButton scoreBtn;
     private Location location;
     private double longitude = BARMUDA_TRIANGLE_LONG;
     private double latitude = BARMUDA_TRIANGL_LAT;
@@ -68,11 +69,6 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         bindUI();
         googleApiClient = new GoogleApiClient.Builder(this).
                 enableAutoManage(this,this).addConnectionCallbacks(this).addApi(LocationServices.API).build();
-
-
-
-
-        //dummyReadFromPreferences();
     }
 
     private void readNewHighScores() {
@@ -110,16 +106,20 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
     public void bindUI() {
         intent = new Intent(this, MineBoard.class);
         startBtn = (Button) findViewById(R.id.play_btn);
+
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!startBtn.getText().equals("START"))
-                    startActivity(intent);
+                    try{
+                        startActivity(intent);
+                    }catch (Exception e){
+
+                    }
+
             }
         });
 
-
-        //FORE TESTING ONLY#####################################################################
         intent2 = new Intent(this, ScoreBoard.class);
         if(location != null){
             longitude = location.getLongitude();
@@ -127,18 +127,15 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         }
         intent2.putExtra("long", this.longitude);
         intent2.putExtra("lat", this.latitude);
-        scoreBtn = (Button) findViewById(R.id.Test_Button);
+        scoreBtn = (ImageButton) findViewById(R.id.score_table_button);
         scoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                     startActivity(intent2);
             }
         });
-        //FORE TESTING ONLY#####################################################################
         setButtons();
         readLastPlayed();
-
-
     }
 
     private void setButtons() {
@@ -236,15 +233,12 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         }
     }
 
-
     @Override
     protected void onStart(){
         googleApiClient.connect();
         super.onStart();
 
     }
-
-
 
     @Override
     protected void onStop(){
@@ -261,7 +255,6 @@ public class WelcomeScreen extends AppCompatActivity implements View.OnClickList
         Log.d("Map" , "Lon:" + location.getLongitude()  + location.getLatitude());
         this.location = location;
     }
-
 
 
     @Override

@@ -9,11 +9,11 @@ import com.google.android.gms.maps.MapFragment;
  * Created by matka on 13/01/17.
  */
 
-public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
+public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     private MyScoresMap map;
     private ScoresListView scoresListView;
 
-    public DemoCollectionPagerAdapter(FragmentManager fm , MyScoresMap map ,ScoresListView scoresListView) {
+    public CollectionPagerAdapter(FragmentManager fm , MyScoresMap map , ScoresListView scoresListView) {
         super(fm);
         this.map = map;
         this.scoresListView = scoresListView;
@@ -30,16 +30,6 @@ public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
             default:
                 return null;
         }
-
-           /* Fragment fragment = new MyScoresMap();
-            Bundle args = new Bundle();
-            // Our object is just an integer :-P
-            ScoresListView slv = new ScoresListView();
-            args.putInt("object", i+1);
-
-
-            fragment.setArguments(args);
-            return fragment;*/
     }
 
     @Override

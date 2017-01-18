@@ -6,4 +6,7 @@
     <color name="Yellow">#FFF443</color>
     <color name="Purple">#AA77DF</color>
     <color name="Red">#FB2E2E</color>
+    <style name="listFont" parent="@android:style/Widget.ListView">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>

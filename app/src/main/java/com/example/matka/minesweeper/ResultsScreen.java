@@ -58,11 +58,9 @@ public class ResultsScreen extends AppCompatActivity {
 
         ScoreTable table = SharedPreferencesHandler.getData(this);
 
-        //SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("Scores", 0);
 
         if (getIntent().getStringExtra("status").equals("win")){
             String level = getIntent().getStringExtra("level");
-            //int bestScore = sharedPref.getInt(level, 0);
             int result  = Integer.parseInt(getIntent().getStringExtra("result"));
 
             TextView finalTime = (TextView)findViewById(R.id.textViewTime);
@@ -81,7 +79,6 @@ public class ResultsScreen extends AppCompatActivity {
 
                 try {
                     addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                    //addresses = geocoder.getFromLocation( -33.865143, 151.209900, 1);
                 } catch (IOException e) {
                 }
                 if(addresses.size()>0)
